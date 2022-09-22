@@ -1,14 +1,16 @@
 import {useState, useEffect} from "react";
 import {getAllStudents} from "./client";
-import {Breadcrumb, Empty, Layout, Menu, Spin, Table} from 'antd';
+import {Breadcrumb, Button, Empty, Layout, Menu, Spin, Table} from 'antd';
 import {
   DesktopOutlined,
   FileOutlined,
   LoadingOutlined,
   PieChartOutlined,
+  PlusOutlined,
   TeamOutlined,
   UserOutlined,
 } from '@ant-design/icons';
+import StudentDrawerForm from "./StudentDrawerForm";
 import './App.css';
 
 const {Header, Content, Footer, Sider} = Layout;
@@ -49,6 +51,7 @@ function App() {
   const [students, setStudents] = useState([]);
   const [collapsed, setCollapsed] = useState(false);
   const [fetching, setFetching] = useState(true);
+  const [showDrawer, setShowDrawer] = useState(false);
 
   const fetchStudents = () => getAllStudents()
   .then(res => res.json())
@@ -65,23 +68,35 @@ function App() {
 
   const renderStudents = () => {
     if (fetching) {
-      return <Spin indicator={antIcon} />
+      return <Spin indicator={antIcon}/>
     }
     if (students.length <= 0) {
-      return <Empty />;
+      return <Empty/>;
     }
-    return <Table dataSource={students}
-                  columns={columns}
-                  bordered
-                  title={() => 'Students'}
-                  pagination={{
-                    pageSize: 50,
-                  }}
-                  scroll={{
-                    y: 500,
-                  }}
-                  rowKey={(student) => student.id}
-    />;
+    return <>
+      <StudentDrawerForm
+          showDrawer={showDrawer}
+          setShowDrawer={setShowDrawer}
+          fetchStudents={fetchStudents}
+      />
+      <Table dataSource={students}
+             columns={columns}
+             bordered
+             title={() =>
+                 <Button type="primary" shape="round"
+                         onClick={() => setShowDrawer(!showDrawer)}
+                         icon={<PlusOutlined/>} size="small">
+                   Add New Student
+                 </Button>}
+             pagination={{
+               pageSize: 50,
+             }}
+             scroll={{
+               y: 500,
+             }}
+             rowKey={(student) => student.id}
+      />
+    </>
 
   }
 
