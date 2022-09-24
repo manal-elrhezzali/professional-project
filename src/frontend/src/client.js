@@ -11,9 +11,7 @@ const checkStatus = response => {
 
 export const getAllStudents = () =>
     fetch("api/v1/students")
-    .then(
-        checkStatus
-    );
+    .then(checkStatus);
 
 export const addNewStudent = student =>
     fetch("api/v1/students", {

@@ -2,14 +2,15 @@ import {Drawer, Input, Col, Select, Form, Row, Button, Spin} from 'antd';
 import {addNewStudent} from "./client";
 import {useState} from "react";
 import {LoadingOutlined} from "@ant-design/icons";
-import{successNotification, errorNotification} from "./Notification";
+import {successNotification, errorNotification} from "./Notification";
 
 const {Option} = Select;
-const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
+const antIcon = <LoadingOutlined style={{fontSize: 24}} spin/>;
 
 function StudentDrawerForm({showDrawer, setShowDrawer, fetchStudents}) {
   const onCLose = () => setShowDrawer(false);
   const [submitting, setSubmitting] = useState(false);
+
   const onFinish = student => {
     setSubmitting(true)
     console.log(JSON.stringify(student, null, 2))
@@ -20,17 +21,26 @@ function StudentDrawerForm({showDrawer, setShowDrawer, fetchStudents}) {
       onCLose();
       successNotification("Student successfully added",
           `${student.name} was added to the system`
-          )
+      )
       fetchStudents();
     }).catch(err => {
-      console.log(err)
+      console.log(err);
+      err.response.json().then(res => {
+        console.log(res);
+        errorNotification("There was an issue",
+            `${res.message} [${res.status}] [${res.error}]`,
+            "bottomLeft")
+      });
     }).finally(() => {
       setSubmitting(false);
     })
   };
 
   const onFinishFailed = errorInfo => {
-    alert(JSON.stringify(errorInfo, null, 2));
+    errorNotification("There was an issue",
+        JSON.stringify(errorInfo, null, 2),
+        "bottomLeft")
+    // alert(JSON.stringify(errorInfo, null, 2));
   };
 
   return <Drawer
@@ -52,7 +62,7 @@ function StudentDrawerForm({showDrawer, setShowDrawer, fetchStudents}) {
       }
   >
     <Form layout="vertical"
-          onFinishFailed={onFinishFailed}
+          onFinishFailed={onFinish}
           onFinish={onFinish}
           hideRequiredMark>
       <Row gutter={16}>

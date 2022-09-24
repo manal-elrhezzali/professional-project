@@ -2,6 +2,7 @@ package com.manalrzzl.professionalproject.student;
 
 import java.util.Arrays;
 import java.util.List;
+import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,11 +22,12 @@ public class StudentController {
 
   @GetMapping
   public List<Student> getAllStudents() {
+//    throw new IllegalStateException("Internal Error");
     return studentService.getAllStudents();
   }
 
   @PostMapping
-  public void addStudent(@RequestBody Student student) {
+  public void addStudent(@Valid @RequestBody Student student) {
     studentService.addStudent(student);
   }
 

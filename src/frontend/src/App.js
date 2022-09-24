@@ -25,7 +25,7 @@ import {
 } from '@ant-design/icons';
 import StudentDrawerForm from "./StudentDrawerForm";
 import './App.css';
-import {successNotification} from "./Notification";
+import {errorNotification, successNotification} from "./Notification";
 
 const {Header, Content, Footer, Sider} = Layout;
 const {SubMenu} = Menu;
@@ -45,11 +45,17 @@ const TheAvatar = ({name}) => {
 
 const removeStudent = (studentId, callback) =>
     deleteStudent(studentId).then(() => {
-          successNotification("Student deleted",
-              `Student with id ${studentId} was deleted`);
-          callback();
-        }
-    )
+      successNotification("Student deleted",
+          `Student with id ${studentId} was deleted`);
+      callback();
+    }).catch(err => {
+      console.log(err);
+      err.response.json().then(res => {
+        console.log(res);
+        errorNotification("There was an issue",
+            `${res.message} [${res.status}] [${res.error}]`)
+      });
+    });
 
 const columns = fetchStudents => [
   {
@@ -103,8 +109,7 @@ const antIcon = (
         style={{
           fontSize: 24,
         }}
-        spin
-    />
+        spin/>
 );
 
 function App() {
@@ -118,8 +123,14 @@ function App() {
   .then(data => {
     console.log(data);
     setStudents(data);
-    setFetching(false);
-  })
+  }).catch(err => {
+    console.log(err.response)
+    err.response.json().then(res => {
+      console.log(res);
+      errorNotification("There was an issue",
+          `${res.message} [${res.status}] [${res.error}]`)
+    });
+  }).finally(() => setFetching(false));
 
   useEffect(() => {
     console.log("Component is mounted");
@@ -131,7 +142,19 @@ function App() {
       return <Spin indicator={antIcon}/>
     }
     if (students.length <= 0) {
-      return <Empty/>;
+      return <>
+        <StudentDrawerForm
+            showDrawer={showDrawer}
+            setShowDrawer={setShowDrawer}
+            fetchStudents={fetchStudents}
+        />
+        <Button type="primary" shape="round"
+                onClick={() => setShowDrawer(!showDrawer)}
+                icon={<PlusOutlined/>} size="small">
+          Add New Student
+        </Button>
+        <Empty/>
+      </>
     }
     return <>
       <StudentDrawerForm
@@ -205,9 +228,6 @@ function App() {
       <Footer style={{textAlign: 'center'}}>By Manal El rhezzali</Footer>
     </Layout>
   </Layout>
-  // return students.map((student, index) => {
-  //   return <p key={index}>{student.id} {student.name}</p>;
-  // });
 }
 
 export default App;
