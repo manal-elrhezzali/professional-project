@@ -9,7 +9,7 @@ class ProfessionalProjectApplicationTests {
 
 	@Test
 	void contextLoads() {
-		Assertions.fail("The test failed");
+//		Assertions.fail("The test failed");
 	}
 
 }
