@@ -4,7 +4,7 @@ import {
   Avatar,
   Badge,
   Breadcrumb,
-  Button,
+  Button, Divider,
   Empty,
   Layout,
   Menu,
@@ -225,7 +225,11 @@ function App() {
           {renderStudents()}
         </div>
       </Content>
-      <Footer style={{textAlign: 'center'}}>By Manal El rhezzali</Footer>
+      <Footer style={{textAlign: 'center'}}>By Manal El rhezzali
+        <Divider>
+          <a href="#">Link </a>
+        </Divider>
+      </Footer>
     </Layout>
   </Layout>
 }
