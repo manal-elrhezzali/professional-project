@@ -227,7 +227,11 @@ function App() {
       </Content>
       <Footer style={{textAlign: 'center'}}>By Manal El rhezzali
         <Divider>
-          <a href="#">Link </a>
+
+          <a
+              // rel="noopener noreferrer"
+              target="_blank"
+              href="https://manal-elrhezzali.netlify.app/">Manal EL RHEZZALI</a>
         </Divider>
       </Footer>
     </Layout>
